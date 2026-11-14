@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Athkari</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#f5f7fb" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#12151c" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#0b0b0b">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Athkari">
@@ -22,26 +21,34 @@ body{margin:0;background:var(--bg);color:var(--tx);font-family:Amiri,"Traditiona
 .w{max-width:640px;margin:0 auto;padding:12px}
 h1{text-align:center;margin:8px 0 12px;font-size:28px}
 .tabs{display:flex;gap:8px}
-.tm{text-align:center;font-size:14px;color:var(--mu);opacity:.8;margin:-2px 0 6px}
-.bar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:10;background:var(--card);border:1px solid var(--bd);border-radius:28px;padding:10px 12px 4px;box-shadow:0 8px 24px rgba(0,0,0,.2);margin-bottom:12px}
-.tabs button{flex:1;padding:12px;font-size:20px;font-weight:700;font-family:inherit;border:0;outline:0;background:var(--bg);color:var(--mu);border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:.2s}
+.tm{display:flex;justify-content:center;align-items:center;gap:4px;font-size:14px;color:var(--mu);opacity:.8;margin:0 0 4px}
+.tm button{background:none;border:0;padding:4px;margin:-4px;color:inherit;display:flex;cursor:pointer}
+.tm svg{width:15px;height:15px}
+.tm button.on{color:var(--dn)}
+.bar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:10;background:var(--card);border:1px solid var(--bd);border-radius:22px;padding:6px 10px 2px;box-shadow:0 6px 18px rgba(0,0,0,.2);margin-bottom:10px}
+.tabs button{flex:1;padding:8px;font-size:17px;font-weight:700;font-family:inherit;border:0;outline:0;background:var(--bg);color:var(--mu);border-radius:14px;cursor:pointer;-webkit-tap-highlight-color:transparent;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:.2s}
 .tabs button:focus,.st button:focus{outline:0}
 .tabs button.on{background:linear-gradient(135deg,#f0a443,#e0701e);color:#fff;box-shadow:0 4px 12px rgba(224,112,30,.35)}
 button{-webkit-tap-highlight-color:transparent}
-.pg{height:8px;background:var(--bd);border-radius:8px;margin:10px 0 4px;overflow:hidden}
+
+.pg{height:8px;background:var(--bd);border-radius:8px;margin:6px 0 2px;overflow:hidden}
 .pg i{display:block;height:100%;width:0;background:var(--dn);transition:width .3s}
-.st{display:flex;justify-content:space-between;color:var(--mu);font-size:16px;margin-bottom:8px}
+.st{display:flex;justify-content:space-between;color:var(--mu);font-size:14px;margin-bottom:4px}
 .st button{background:none;border:0;color:var(--ac);font:inherit;cursor:pointer}
-.c{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin:10px 0;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:.2s}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin:10px 0;cursor:pointer;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;position:relative;overflow:hidden;-webkit-tap-highlight-color:transparent;transition:.2s}
 .c p{margin:0 0 10px;font-size:22px;line-height:2}
 .f{display:flex;justify-content:space-between;align-items:center;color:var(--mu);font-size:15px;gap:8px}
 .n{min-width:64px;text-align:center;padding:6px 14px;border-radius:20px;background:var(--ac);color:#fff;font-weight:700;font-size:20px}
-.c.cur{border:2px solid var(--ac);box-shadow:0 4px 16px rgba(224,138,30,.25)}
+.c.cur{border:2px solid var(--ac);box-shadow:0 4px 16px rgba(224,138,30,.25);scroll-margin-top:calc(env(safe-area-inset-top,0px) + var(--bh,120px) + 24px)}
 .c.w{opacity:.85}
 .c.w .n{background:var(--mu)}
 .c.rs .n{background:#7c5cd6}
 .c.d{background:rgba(46,155,98,.14);border-color:var(--dn)}
 .c.d p{color:var(--mu)}
+.c.pd{border-color:#7c5cd6}
+.c.pd .f span:first-child{color:#7c5cd6;font-weight:700}
+.c.hold::after{content:"";position:absolute;top:0;bottom:0;right:0;width:0;background:rgba(46,155,98,.28);pointer-events:none;animation:hf 3s linear forwards}
+@keyframes hf{to{width:100%}}
 .c.d .n{background:var(--dn)}
 .t{display:inline-block;font-size:14px;color:var(--ac);margin-bottom:4px;font-weight:700}
 .fin{text-align:center;color:var(--dn);font-size:22px;margin:16px 0;display:none}
@@ -50,7 +57,7 @@ button{-webkit-tap-highlight-color:transparent}
 <body>
 <div class="w">
 <h1 id="h">أذكار الصباح</h1>
-<div class="bar"><div class="tm" id="tm"></div><div class="tabs"><button id="b0">☀️ الصباح</button><button id="b1">🌙 المساء</button></div>
+<div class="bar"><div class="tm"><span id="tm"></span><button id="lc" aria-label="الذكر الحالي"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><path d="M12 2.5v4M12 17.5v4M2.5 12h4M17.5 12h4"/></svg></button></div><div class="tabs"><button id="b0">☀️ الصباح</button><button id="b1">🌙 المساء</button></div>
 <div class="pg"><i id="pb"></i></div>
 <div class="st"><span id="ps"></span><button id="rs">إعادة</button></div></div>
 <div id="l"></div>
@@ -104,32 +111,69 @@ const $=id=>document.getElementById(id),ar=n=>n.toLocaleString("ar-EG");
 const H=new Date().getHours();let m=(H>=1&&H<14)?0:1,left={},dn={},rv={};
 function init(k){left[k]=D[k].map(i=>i.n);dn[k]=[];rv[k]=[]}
 init(0);init(1);
-function render(){
+let fol=true;
+let pend=null,hold=null,lp=0;
+function go(){
+  requestAnimationFrame(()=>{
+    const bar=document.querySelector(".bar"),c=document.querySelector(".c.cur");
+    document.documentElement.style.setProperty("--bh",bar.offsetHeight+"px");
+    const off=(parseFloat(getComputedStyle(bar).top)||8)+bar.offsetHeight+14;
+    let y=0;
+    if(c&&dn[m].length)y=c.getBoundingClientRect().top+scrollY-off;
+    else if(!c)y=document.documentElement.scrollHeight;
+    scrollTo({top:Math.max(0,y),behavior:"auto"});
+    if(c&&dn[m].length)setTimeout(()=>{if(c.isConnected&&Math.abs(c.getBoundingClientRect().top-off)>40)c.scrollIntoView({block:"start"})},120);
+  });
+}
+function render(g){
   $("h").textContent=m?"أذكار المساء":"أذكار الصباح";
   $("b0").className=m?"":"on";$("b1").className=m?"on":"";
   const L=$("l");L.innerHTML="";
   const all=D[m].map((_,i)=>i),cur=all.find(i=>left[m][i]>0);
   const rest=all.filter(i=>left[m][i]>0&&i!==cur);
-  const order=(cur===undefined?[]:[cur]).concat(dn[m],rest);
+  const order=dn[m].concat(cur===undefined?[]:[cur],rest);
   order.forEach(i=>{
     const it=D[m][i],r=left[m][i],c=document.createElement("div");
-    c.className="c"+(r===0?" d":i===cur?" cur":" w")+(r>0&&rv[m].includes(i)?" rs":"");
-    c.innerHTML=(it.t?'<div class="t">'+it.t+'</div>':'')+'<p>'+it.x+'</p><div class="f"><span>'+(it.s||"")+'</span><span class="n">'+(r===0?"✓":ar(r)+(it.n>1?" / "+ar(it.n):""))+'</span></div>';
-    c.onclick=()=>{if(navigator.vibrate)navigator.vibrate(15);if(r===0){left[m][i]=it.n;dn[m]=dn[m].filter(j=>j!==i);rv[m].push(i)}else{left[m][i]--;if(left[m][i]===0){dn[m].unshift(i);rv[m]=rv[m].filter(j=>j!==i)}}render()};
+    const pd=r===0&&pend&&pend.i===i;
+    c.className="c"+(r===0?" d":i===cur?" cur":" w")+(r>0&&rv[m].includes(i)?" rs":"")+(pd?" pd":"");
+    c.innerHTML=(it.t?'<div class="t">'+it.t+'</div>':'')+'<p>'+it.x+'</p><div class="f"><span>'+(pd?"اضغط مرة ثانية لإرجاعه":(it.s||""))+'</span><span class="n">'+(r===0?"✓":ar(r)+(it.n>1?" / "+ar(it.n):""))+'</span></div>';
+    c.onclick=()=>{
+      if(Date.now()-lp<700)return;
+      if(navigator.vibrate)navigator.vibrate(15);
+      if(r===0){
+        const t=Date.now();
+        if(pend&&pend.i===i&&t-pend.t<2000){pend=null;left[m][i]=it.n;dn[m]=dn[m].filter(j=>j!==i);rv[m].push(i);render(true)}
+        else{pend={i:i,t:t};setTimeout(()=>{if(pend&&pend.t===t){pend=null;render()}},2000);render()}
+        return;
+      }
+      left[m][i]--;
+      const fin=left[m][i]===0;
+      if(fin){dn[m].push(i);rv[m]=rv[m].filter(j=>j!==i)}
+      render(fin&&i===cur);
+    };
+    if(r>0){
+      const x=()=>{clearTimeout(hold);hold=null;c.classList.remove("hold")};
+      c.onpointerdown=()=>{x();c.classList.add("hold");hold=setTimeout(()=>{hold=null;lp=Date.now();if(navigator.vibrate)navigator.vibrate(60);left[m][i]=0;if(!dn[m].includes(i))dn[m].push(i);rv[m]=rv[m].filter(j=>j!==i);render(i===cur)},3000)};
+      c.onpointerup=c.onpointercancel=c.onpointerleave=x;
+      c.oncontextmenu=e=>e.preventDefault();
+    }
     L.appendChild(c);
   });
   const d=dn[m].length,T=D[m].length;
   $("pb").style.width=(d/T*100)+"%";
   $("ps").textContent="أنجزت "+ar(d)+" من "+ar(T);
   $("fin").style.display=d===T?"block":"none";
+  if(g&&fol)go();
 }
 function upd(){render()}
-$("b0").onclick=()=>{m=0;render();scrollTo(0,0)};
-$("b1").onclick=()=>{m=1;render();scrollTo(0,0)};
-$("rs").onclick=()=>{init(m);upd()};
+$("b0").onclick=()=>{m=0;pend=null;render(true);if(!fol)scrollTo(0,0)};
+$("b1").onclick=()=>{m=1;pend=null;render(true);if(!fol)scrollTo(0,0)};
+$("rs").onclick=()=>{init(m);pend=null;render(true);if(!fol)scrollTo(0,0)};
+$("lc").classList.toggle("on",fol);
+$("lc").onclick=()=>{fol=!fol;$("lc").classList.toggle("on",fol);if(fol)go()};
 function clk(){const d=new Date(),h=d.getHours();$("tm").textContent=(h%12||12)+":"+String(d.getMinutes()).padStart(2,"0")+" "+(h<12?"ص":"م")}
 clk();setInterval(clk,10000);
-render();
+render(true);
 if("serviceWorker" in navigator)addEventListener("load",()=>{try{navigator.serviceWorker.register("sw.js")}catch(e){}});
 </script>
 </body>
