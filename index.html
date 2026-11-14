@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Athkari</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#f5f7fb" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#12151c" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Athkari">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icon-192.png">
+<style>@font-face{font-family:Amiri;font-weight:400;src:url(Amiri-Regular.ttf) format("truetype")}@font-face{font-family:Amiri;font-weight:700;src:url(Amiri-Bold.ttf) format("truetype")}</style>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--tx:#1d2433;--mu:#6b7385;--ac:#e08a1e;--dn:#2e9b62;--bd:#e3e7ef;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12151c;--card:#1c212b;--tx:#eceff5;--mu:#98a0b3;--ac:#f0a443;--dn:#4cc088;--bd:#2b3240;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12151c;--card:#1c212b;--tx:#eceff5;--mu:#98a0b3;--ac:#f0a443;--dn:#4cc088;--bd:#2b3240;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Amiri,"Traditional Arabic",Tahoma,serif}
+.w{max-width:640px;margin:0 auto;padding:12px}
+h1{text-align:center;margin:8px 0 12px;font-size:28px}
+.tabs{display:flex;gap:8px}
+.tm{text-align:center;font-size:14px;color:var(--mu);opacity:.8;margin:-2px 0 6px}
+.bar{position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);z-index:10;background:var(--card);border:1px solid var(--bd);border-radius:28px;padding:10px 12px 4px;box-shadow:0 8px 24px rgba(0,0,0,.2);margin-bottom:12px}
+.tabs button{flex:1;padding:12px;font-size:20px;font-weight:700;font-family:inherit;border:0;outline:0;background:var(--bg);color:var(--mu);border-radius:16px;cursor:pointer;-webkit-tap-highlight-color:transparent;box-shadow:0 1px 3px rgba(0,0,0,.15);transition:.2s}
+.tabs button:focus,.st button:focus{outline:0}
+.tabs button.on{background:linear-gradient(135deg,#f0a443,#e0701e);color:#fff;box-shadow:0 4px 12px rgba(224,112,30,.35)}
+button{-webkit-tap-highlight-color:transparent}
+.pg{height:8px;background:var(--bd);border-radius:8px;margin:10px 0 4px;overflow:hidden}
+.pg i{display:block;height:100%;width:0;background:var(--dn);transition:width .3s}
+.st{display:flex;justify-content:space-between;color:var(--mu);font-size:16px;margin-bottom:8px}
+.st button{background:none;border:0;color:var(--ac);font:inherit;cursor:pointer}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:14px;margin:10px 0;cursor:pointer;user-select:none;-webkit-tap-highlight-color:transparent;transition:.2s}
+.c p{margin:0 0 10px;font-size:22px;line-height:2}
+.f{display:flex;justify-content:space-between;align-items:center;color:var(--mu);font-size:15px;gap:8px}
+.n{min-width:64px;text-align:center;padding:6px 14px;border-radius:20px;background:var(--ac);color:#fff;font-weight:700;font-size:20px}
+.c.cur{border:2px solid var(--ac);box-shadow:0 4px 16px rgba(224,138,30,.25)}
+.c.w{opacity:.85}
+.c.w .n{background:var(--mu)}
+.c.rs .n{background:#7c5cd6}
+.c.d{background:rgba(46,155,98,.14);border-color:var(--dn)}
+.c.d p{color:var(--mu)}
+.c.d .n{background:var(--dn)}
+.t{display:inline-block;font-size:14px;color:var(--ac);margin-bottom:4px;font-weight:700}
+.fin{text-align:center;color:var(--dn);font-size:22px;margin:16px 0;display:none}
+</style>
+</head>
+<body>
+<div class="w">
+<h1 id="h">أذكار الصباح</h1>
+<div class="bar"><div class="tm" id="tm"></div><div class="tabs"><button id="b0">☀️ الصباح</button><button id="b1">🌙 المساء</button></div>
+<div class="pg"><i id="pb"></i></div>
+<div class="st"><span id="ps"></span><button id="rs">إعادة</button></div></div>
+<div id="l"></div>
+<div class="fin" id="fin">تقبّل الله منا ومنكم 🤍</div>
+</div>
+<script>
+const KU="اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ";
+const IK="قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُن لَّهُ كُفُوًا أَحَدٌ";
+const FA="قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِن شَرِّ مَا خَلَقَ ۝ وَمِن شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِن شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِن شَرِّ حَاسِدٍ إِذَا حَسَدَ";
+const NA="قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۝ مَلِكِ النَّاسِ ۝ إِلَٰهِ النَّاسِ ۝ مِن شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۝ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۝ مِنَ الْجِنَّةِ وَالنَّاسِ";
+const Q=[["آية الكرسي",KU,1],["سورة الإخلاص",IK,3],["سورة الفلق",FA,3],["سورة الناس",NA,3]].map(a=>({t:a[0],x:a[1],n:a[2]}));
+const o=(x,n,s)=>({x,n,s});
+const RAD=o("رضيت بالله ربًّا، وبالإسلام دينًا، وبمحمد صلى الله عليه وسلم نبيًّا ورسولًا.",3,"مسند أحمد");
+const SAY=o("اللهم أنت ربي لا إله إلا أنت، خلقتني وأنا عبدك، وأنا على عهدك ووعدك ما استطعت، أعوذ بك من شر ما صنعت، أبوء لك بنعمتك عليّ وأبوء بذنبي، فاغفر لي؛ فإنه لا يغفر الذنوب إلا أنت.",1,"صحيح البخاري");
+const BIS=o("بسم الله الذي لا يضر مع اسمه شيء في الأرض ولا في السماء وهو السميع العليم.",3,"سنن أبي داود");
+const TAM=o("أعوذ بكلمات الله التامات من شر ما خلق.",3,"النسائي وأحمد");
+const KUF=o("اللهم إني أعوذ بك من الكفر والفقر، وأعوذ بك من عذاب القبر، لا إله إلا أنت.",3,"أبو داود والنسائي");
+const HAM=o("اللهم إني أعوذ بك من الهم والحزن، وأعوذ بك من العجز والكسل، وأعوذ بك من الجبن والبخل، وأعوذ بك من غلبة الدَّين وقهر الرجال.",1,"رواه البخاري");
+const D={
+0:[...Q,
+o("أصبحنا على فطرة الإسلام وعلى كلمة الإخلاص، وعلى دين نبينا محمد صلى الله عليه وسلم، وعلى ملة أبينا إبراهيم حنيفًا مسلمًا وما كان من المشركين.",1,"مسند أحمد"),
+o("اللهم بك أصبحنا، وبك أمسينا، وبك نحيا، وبك نموت، وإليك المصير.",1,"سنن أبي داود"),
+RAD,
+o("سبحان الله وبحمده: عدد خلقه، ورضا نفسه، وزنة عرشه، ومداد كلماته.",3,""),
+BIS,TAM,
+o("اللهم عافني في بدني، اللهم عافني في سمعي، اللهم عافني في بصري.",3,"أبو داود والنسائي"),
+o("استغفر الله وأتوب إليه.",100,""),
+o("سبحان الله وبحمده.",100,""),
+o("أصبحنا وأصبح الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير.. ربِّ أسألك خير ما في هذا اليوم وخير ما بعده، وأعوذ بك من شر ما في هذا اليوم وشر ما بعده.. ربِّ أعوذ بك من الكسل، وسوء الكبر، ربِّ أعوذ بك من عذاب في النار، وعذاب في القبر.",1,"صحيح مسلم"),
+o("أصبحنا وأصبح الملك لله رب العالمين، اللهم إني أسألك خير هذا اليوم: فتحه، ونصره، ونوره، وبركته، وهداه، وأعوذ بك من شر ما فيه وشر ما بعده.",1,"سنن أبي داود"),
+o("اللهم ما أصبح بي من نعمة أو بأحد من خلقك فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر.",1,"سنن أبي داود"),
+SAY,KUF,
+o("اللهم إني أسألك علمًا نافعًا، ورزقًا طيبًا، وعملًا متقبلًا.",1,"سنن ابن ماجه"),
+HAM,
+o("لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير.",10,"متفق عليه")],
+1:[...Q,
+o("اللهم إني أمسيت أشهدك وأشهد حملة عرشك، وملائكتك وجميع خلقك، أنك أنت الله لا إله إلا أنت، وحدك لا شريك لك، وأن محمدًا عبدك ورسولك.",4,"سنن أبي داود"),
+RAD,
+o("يا حي يا قيوم برحمتك أستغيث، أصلح لي شأني كله، ولا تكلني إلى نفسي طرفة عين.",1,"الحاكم في المستدرك"),
+TAM,HAM,
+o("اللهم صلِّ وسلم وبارك على نبينا محمد.",10,"أخرجه الطبراني"),
+o("أمسينا وأمسى الملك لله، والحمد لله، لا إله إلا الله وحده لا شريك له، له الملك وله الحمد، وهو على كل شيء قدير.. ربِّ أسألك خير ما في هذه الليلة وخير ما بعدها، وأعوذ بك من شر ما في هذه الليلة وشر ما بعدها.. ربِّ أعوذ بك من الكسل، وسوء الكبر، ربِّ أعوذ بك من عذاب في النار، وعذاب في القبر.",1,"صحيح مسلم"),
+SAY,
+o("اللهم بك أمسينا وبك أصبحنا، وبك نحيا وبك نموت، وإليك النشور.",1,"سنن أبي داود"),
+o("اللهم ما أمسى بي من نعمة أو بأحد من خلقك، فمنك وحدك لا شريك لك، فلك الحمد ولك الشكر.",1,"أبو داود والنسائي"),
+BIS,KUF,
+o("لا إله إلا الله وحده لا شريك له، له الملك وله الحمد وهو على كل شيء قدير.",10,"متفق عليه"),
+o("سبحان الله وبحمده.",100,"صحيح مسلم")]
+};
+const $=id=>document.getElementById(id),ar=n=>n.toLocaleString("ar-EG");
+const H=new Date().getHours();let m=(H>=1&&H<14)?0:1,left={},dn={},rv={};
+function init(k){left[k]=D[k].map(i=>i.n);dn[k]=[];rv[k]=[]}
+init(0);init(1);
+function render(){
+  $("h").textContent=m?"أذكار المساء":"أذكار الصباح";
+  $("b0").className=m?"":"on";$("b1").className=m?"on":"";
+  const L=$("l");L.innerHTML="";
+  const all=D[m].map((_,i)=>i),cur=all.find(i=>left[m][i]>0);
+  const rest=all.filter(i=>left[m][i]>0&&i!==cur);
+  const order=(cur===undefined?[]:[cur]).concat(dn[m],rest);
+  order.forEach(i=>{
+    const it=D[m][i],r=left[m][i],c=document.createElement("div");
+    c.className="c"+(r===0?" d":i===cur?" cur":" w")+(r>0&&rv[m].includes(i)?" rs":"");
+    c.innerHTML=(it.t?'<div class="t">'+it.t+'</div>':'')+'<p>'+it.x+'</p><div class="f"><span>'+(it.s||"")+'</span><span class="n">'+(r===0?"✓":ar(r)+(it.n>1?" / "+ar(it.n):""))+'</span></div>';
+    c.onclick=()=>{if(navigator.vibrate)navigator.vibrate(15);if(r===0){left[m][i]=it.n;dn[m]=dn[m].filter(j=>j!==i);rv[m].push(i)}else{left[m][i]--;if(left[m][i]===0){dn[m].unshift(i);rv[m]=rv[m].filter(j=>j!==i)}}render()};
+    L.appendChild(c);
+  });
+  const d=dn[m].length,T=D[m].length;
+  $("pb").style.width=(d/T*100)+"%";
+  $("ps").textContent="أنجزت "+ar(d)+" من "+ar(T);
+  $("fin").style.display=d===T?"block":"none";
+}
+function upd(){render()}
+$("b0").onclick=()=>{m=0;render();scrollTo(0,0)};
+$("b1").onclick=()=>{m=1;render();scrollTo(0,0)};
+$("rs").onclick=()=>{init(m);upd()};
+function clk(){const d=new Date(),h=d.getHours();$("tm").textContent=(h%12||12)+":"+String(d.getMinutes()).padStart(2,"0")+" "+(h<12?"ص":"م")}
+clk();setInterval(clk,10000);
+render();
+if("serviceWorker" in navigator)addEventListener("load",()=>{try{navigator.serviceWorker.register("sw.js")}catch(e){}});
+</script>
+</body>
+</html>
